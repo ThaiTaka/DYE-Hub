@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { Blocks, GraduationCap, LayoutDashboard, Gamepad2, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -18,9 +19,13 @@ export function Sidebar() {
   return (
     <aside className="hidden md:fixed md:inset-y-0 md:left-0 md:flex md:w-[250px] md:flex-col md:border-r md:border-sidebar-border md:bg-sidebar">
       <div className="flex h-16 items-center gap-2.5 border-b border-sidebar-border px-6">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+        <motion.div
+          whileHover={{ rotate: -8, scale: 1.05 }}
+          transition={{ type: "spring", stiffness: 300, damping: 15 }}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground"
+        >
           <GraduationCap className="h-5 w-5" />
-        </div>
+        </motion.div>
         <span className="text-lg font-bold tracking-tight text-sidebar-foreground">
           DYE Hub
         </span>
@@ -35,14 +40,24 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground shadow-sm"
-                  : "text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                  ? "text-sidebar-primary-foreground"
+                  : "text-sidebar-foreground/70 hover:text-sidebar-accent-foreground"
               )}
             >
-              <Icon className="h-4 w-4 shrink-0" />
-              {item.label}
+              {isActive && (
+                <motion.div
+                  layoutId="sidebar-active-pill"
+                  className="absolute inset-0 rounded-lg bg-sidebar-primary shadow-sm"
+                  transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                />
+              )}
+              {!isActive && (
+                <span className="absolute inset-0 rounded-lg bg-sidebar-accent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+              )}
+              <Icon className="relative z-10 h-4 w-4 shrink-0 transition-transform duration-200 group-hover:scale-110" />
+              <span className="relative z-10">{item.label}</span>
             </Link>
           );
         })}

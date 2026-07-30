@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { PageTransition } from "@/components/layout/page-transition";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,10 +32,20 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full bg-muted/40">
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 -z-10 overflow-hidden"
+        >
+          <div className="animate-float-slow absolute -top-24 -left-24 h-96 w-96 rounded-full bg-primary/15 blur-3xl" />
+          <div className="animate-float-slower absolute top-1/3 -right-32 h-[28rem] w-[28rem] rounded-full bg-secondary/15 blur-3xl" />
+          <div className="animate-float-slow absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
+        </div>
         <Sidebar />
         <div className="flex min-h-full flex-col md:pl-[250px]">
           <Header />
-          <main className="flex-1 px-4 py-6 md:px-8 md:py-10">{children}</main>
+          <main className="flex-1 px-4 py-6 md:px-8 md:py-10">
+            <PageTransition>{children}</PageTransition>
+          </main>
         </div>
       </body>
     </html>
