@@ -1,9 +1,23 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Bell, GraduationCap } from "lucide-react";
+import { Bell, GraduationCap, LogOut } from "lucide-react";
+import { logout } from "@/app/actions/auth";
 
-export function Header() {
+interface HeaderProps {
+  user: { email: string; fullName?: string } | null;
+}
+
+function getInitials(label: string) {
+  const parts = label.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+export function Header({ user }: HeaderProps) {
+  const displayName = user?.fullName || user?.email || "Khách";
+  const initials = getInitials(user?.fullName || user?.email || "GV");
+
   return (
     <motion.header
       initial={{ opacity: 0, y: -12 }}
@@ -39,13 +53,26 @@ export function Header() {
         </button>
         <div className="flex items-center gap-2.5">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-            GV
+            {initials}
           </div>
           <div className="hidden text-sm sm:block">
-            <p className="font-medium leading-tight text-foreground">Cô Lan</p>
-            <p className="text-xs leading-tight text-muted-foreground">Giáo viên</p>
+            <p className="max-w-[10rem] truncate font-medium leading-tight text-foreground">
+              {displayName}
+            </p>
+            <p className="text-xs leading-tight text-muted-foreground">
+              Giáo viên
+            </p>
           </div>
         </div>
+        <form action={logout}>
+          <button
+            type="submit"
+            aria-label="Đăng xuất"
+            className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+          >
+            <LogOut className="h-5 w-5" />
+          </button>
+        </form>
       </div>
     </motion.header>
   );

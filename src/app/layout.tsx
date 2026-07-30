@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Sidebar } from "@/components/layout/sidebar";
-import { Header } from "@/components/layout/header";
-import { PageTransition } from "@/components/layout/page-transition";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,13 +37,7 @@ export default function RootLayout({
           <div className="animate-float-slower absolute top-1/3 -right-32 h-[28rem] w-[28rem] rounded-full bg-secondary/15 blur-3xl" />
           <div className="animate-float-slow absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-accent/20 blur-3xl" />
         </div>
-        <Sidebar />
-        <div className="flex min-h-full flex-col md:pl-[250px]">
-          <Header />
-          <main className="flex-1 px-4 py-6 md:px-8 md:py-10">
-            <PageTransition>{children}</PageTransition>
-          </main>
-        </div>
+        {children}
       </body>
     </html>
   );
