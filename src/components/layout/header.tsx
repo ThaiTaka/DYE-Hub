@@ -1,11 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Bell, GraduationCap, LogOut } from "lucide-react";
+import { Bell, GraduationCap, LogOut, Menu } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 
 interface HeaderProps {
   user: { email: string; fullName?: string } | null;
+  onMenuClick?: () => void;
 }
 
 function getInitials(label: string) {
@@ -14,7 +15,7 @@ function getInitials(label: string) {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-export function Header({ user }: HeaderProps) {
+export function Header({ user, onMenuClick }: HeaderProps) {
   const displayName = user?.fullName || user?.email || "Khách";
   const initials = getInitials(user?.fullName || user?.email || "GV");
 
@@ -26,6 +27,14 @@ export function Header({ user }: HeaderProps) {
       className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-border bg-background/80 px-4 backdrop-blur md:px-8"
     >
       <div className="flex items-center gap-2.5">
+        <button
+          type="button"
+          onClick={onMenuClick}
+          aria-label="Mở menu điều hướng"
+          className="rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground md:hidden">
           <GraduationCap className="h-4 w-4" />
         </div>
@@ -52,7 +61,7 @@ export function Header({ user }: HeaderProps) {
           </span>
         </button>
         <div className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
+          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary ring-2 ring-primary/15">
             {initials}
           </div>
           <div className="hidden text-sm sm:block">

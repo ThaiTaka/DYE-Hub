@@ -1,6 +1,4 @@
-import { Sidebar } from "@/components/layout/sidebar";
-import { Header } from "@/components/layout/header";
-import { PageTransition } from "@/components/layout/page-transition";
+import { AppShell } from "@/components/layout/app-shell";
 import { createClient } from "@/lib/supabase/server";
 
 export default async function AppLayout({
@@ -20,15 +18,5 @@ export default async function AppLayout({
       }
     : null;
 
-  return (
-    <>
-      <Sidebar />
-      <div className="flex min-h-full flex-col md:pl-[250px]">
-        <Header user={headerUser} />
-        <main className="flex-1 px-4 py-6 md:px-8 md:py-10">
-          <PageTransition>{children}</PageTransition>
-        </main>
-      </div>
-    </>
-  );
+  return <AppShell user={headerUser}>{children}</AppShell>;
 }
