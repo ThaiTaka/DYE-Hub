@@ -3,9 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Blocks, Gamepad2, Users, type LucideIcon } from "lucide-react";
+import { AlertTriangle, Blocks, Gamepad2, Users, type LucideIcon } from "lucide-react";
 import { InputForm } from "@/components/ui/input-form";
 import { ResultDisplay } from "@/components/ui/result-display";
+import { generateLesson } from "@/app/actions/lesson";
+import type { Lesson } from "@/lib/lesson-schema";
 
 const quickLinks: {
   href: string;
@@ -39,14 +41,24 @@ const quickLinks: {
 
 export default function Home() {
   const [isGenerating, setIsGenerating] = useState(false);
+  const [lesson, setLesson] = useState<Lesson | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  function handleGenerate() {
+  async function handleGenerate(topic: string) {
     setIsGenerating(true);
-    window.setTimeout(() => {
-      setIsGenerating(false);
+    setError(null);
+    const result = await generateLesson(topic);
+    setIsGenerating(false);
+
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+    if (result.lesson) {
+      setLesson(result.lesson);
       setRefreshKey((key) => key + 1);
-    }, 1200);
+    }
   }
 
   return (
@@ -103,7 +115,19 @@ export default function Home() {
       </div>
 
       <InputForm onGenerate={handleGenerate} isGenerating={isGenerating} />
-      <ResultDisplay refreshKey={refreshKey} />
+
+      {error && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          className="flex items-start gap-2.5 rounded-lg bg-destructive/10 p-4 text-sm text-destructive"
+        >
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+          <p>{error}</p>
+        </motion.div>
+      )}
+
+      {lesson && <ResultDisplay lesson={lesson} refreshKey={refreshKey} />}
     </div>
   );
 }

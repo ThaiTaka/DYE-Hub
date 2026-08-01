@@ -14,7 +14,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 
 interface InputFormProps {
-  onGenerate: () => void;
+  onGenerate: (topic: string) => void;
   isGenerating: boolean;
 }
 
@@ -23,7 +23,8 @@ export function InputForm({ onGenerate, isGenerating }: InputFormProps) {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    onGenerate();
+    if (!topic.trim() || isGenerating) return;
+    onGenerate(topic);
   }
 
   return (
